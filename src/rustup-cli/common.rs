@@ -319,10 +319,19 @@ pub fn list_targets(toolchain: &Toolchain<'_>) -> Result<()> {
     Ok(())
 }
 
-pub fn list_components(toolchain: &Toolchain<'_>) -> Result<()> {
+pub fn list_components(toolchain: &Toolchain<'_>, installed_only: bool) -> Result<()> {
     let mut t = term2::stdout();
     for component in toolchain.list_components()? {
         let name = component.name;
+
+        if installed_only {
+            if component.installed {
+                let _ = writeln!(t, "{}", name);
+            }
+
+            continue;
+        }
+
         if component.required {
             let _ = t.attr(term2::Attr::Bold);
             let _ = writeln!(t, "{} (default)", name);

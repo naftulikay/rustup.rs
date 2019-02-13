@@ -292,6 +292,11 @@ pub fn cli() -> App<'static, 'static> {
                     SubCommand::with_name("list")
                         .about("List installed and available components")
                         .arg(
+                            Arg::with_name("installed")
+                                .long("installed")
+                                .help("List only installed toolchains"),
+                        )
+                        .arg(
                             Arg::with_name("toolchain")
                                 .help(TOOLCHAIN_ARG_HELP)
                                 .long("toolchain")
@@ -834,7 +839,7 @@ fn target_remove(cfg: &Cfg, m: &ArgMatches<'_>) -> Result<()> {
 fn component_list(cfg: &Cfg, m: &ArgMatches<'_>) -> Result<()> {
     let toolchain = explicit_or_dir_toolchain(cfg, m)?;
 
-    common::list_components(&toolchain)
+    common::list_components(&toolchain, m.is_present("installed"))
 }
 
 fn component_add(cfg: &Cfg, m: &ArgMatches<'_>) -> Result<()> {
