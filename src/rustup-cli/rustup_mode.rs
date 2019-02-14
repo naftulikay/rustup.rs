@@ -839,7 +839,11 @@ fn target_remove(cfg: &Cfg, m: &ArgMatches<'_>) -> Result<()> {
 fn component_list(cfg: &Cfg, m: &ArgMatches<'_>) -> Result<()> {
     let toolchain = explicit_or_dir_toolchain(cfg, m)?;
 
-    common::list_components(&toolchain, m.is_present("installed"))
+    if m.is_present("installed") {
+        common::list_components(&toolchain)
+    } else {
+        common::list_installed_components(&toolchain)
+    }
 }
 
 fn component_add(cfg: &Cfg, m: &ArgMatches<'_>) -> Result<()> {
